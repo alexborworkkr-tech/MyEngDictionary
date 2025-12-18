@@ -43,7 +43,9 @@ namespace OurChat
                             var registerController = new RegisterController();
                             AuthorizedUser = registerController.Registration(_database, this);
                             break;
-                        default:
+                        case "view":
+                            return "hello world";
+						default:
                             return "Unknown command!";
                     }
                 }
