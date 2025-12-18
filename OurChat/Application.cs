@@ -33,6 +33,8 @@ namespace OurChat
                             return "Available commands:\n" +
                                 "login - to log in\n" +
                                 "register - to register";
+                        case "Gabe":
+                            return "124";
                         case "login":
                             var loginController = new LoginController();
                             AuthorizedUser = loginController.Login(this, _database);
