@@ -1,4 +1,3 @@
-using Microsoft.Win32.SafeHandles;
 using OurChat.Models;
 using System;
 using System.Collections.Generic;
@@ -12,34 +11,11 @@ namespace OurChat.Controllers
     {
         public User Registration(DataBase db, Application application)
         {
-            string regpassword;
             int age = -1;
             application.WriteLine("Please insert your new login first");
-            string login = application.ReadLine();
-
-            foreach (var user in db.Users)
-            {
-                if (user.Login == login)
-                {
-                    application.Error("This login is already used, choose another one");
-                    return null;
-                }
-            }
-
-            while (true)
-            {
-                application.WriteLine("Now insert your new password");
-                regpassword = application.ReadLine();
-                if (regpassword.Length > 5)
-                {
-                    break;
-                }
-                else
-                {
-                    application.Error("Password can't be empty or short!");
-                }
-            }
-
+            string login = GetLogin(db, application);
+            string password = GetPassword(application);
+            
             while (true)
             {
                 application.WriteLine("Now insert age");
@@ -68,7 +44,7 @@ namespace OurChat.Controllers
             }
 
             DateTime birthday = default;
-            while(true)
+            while (true)
             {
                 application.WriteLine("Please insert your date of birth");
                 string regbirthday = application.ReadLine();
@@ -113,7 +89,7 @@ namespace OurChat.Controllers
             User registeredUser = new User
             {
                 Login = login,
-                Password = regpassword,
+                Password = password,
                 Age = age,
                 Height = height,
                 Birthday = birthday,
@@ -121,6 +97,48 @@ namespace OurChat.Controllers
             db.Users.Add(registeredUser);
 
             return registeredUser;
+        }
+
+        public string GetLogin(DataBase db, Application application)
+        {
+            while (true)
+            {
+                application.WriteLine("Please insert your new login first");
+                string login = application.ReadLine();
+                bool isMatch = false;
+                foreach (var user in db.Users)
+                {
+                    if (user.Login == login)
+                    {
+                        application.Error("This login is already used, choose another one");
+                        isMatch = true;
+                        break;
+                    }
+                }
+                if (isMatch == false)
+                {
+                    return login;
+                }
+            }
+        }
+
+        public string GetPassword(Application application)
+        {
+            string regpassword;
+            while (true)
+            {
+                application.WriteLine("Insert your new password");
+                regpassword = application.ReadLine();
+
+                if (regpassword.Length > 5)
+                {
+                    return regpassword;
+                }
+                else
+                {
+                    application.Error("The password must contain at least 6 symbols");
+                }
+            }
         }
     }
 }
