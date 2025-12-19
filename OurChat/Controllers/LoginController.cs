@@ -13,11 +13,15 @@ namespace OurChat.Controllers
         public User Login(Application application, DataBase db)
         {
             int i = 0;
-            
-            while (true)
+
+			while (true)
             {
-                application.WriteLine("Insert your login, please");
+                application.WriteLine("Insert your login, please(DO NOT use 'return' as your login)");
                 string login = application.ReadLine();
+                if (login == "return")
+                {
+                    return null;
+                }
 
                 application.WriteLine("Now password");
                 string password = application.ReadLine();
