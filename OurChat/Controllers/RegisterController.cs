@@ -1,4 +1,3 @@
-using Microsoft.Win32.SafeHandles;
 using OurChat.Models;
 using System;
 using System.Collections.Generic;
@@ -15,16 +14,7 @@ namespace OurChat.Controllers
             string regpassword;
             int age = -1;
             application.WriteLine("Please insert your new login first");
-            string login = application.ReadLine();
-
-            foreach (var user in db.Users)
-            {
-                if (user.Login == login)
-                {
-                    application.Error("This login is already used, choose another one");
-                    return null;
-                }
-            }
+            string login = GetLogin(db, application);
 
             while (true)
             {
@@ -68,7 +58,7 @@ namespace OurChat.Controllers
             }
 
             DateTime birthday = default;
-            while(true)
+            while (true)
             {
                 application.WriteLine("Please insert your date of birth");
                 string regbirthday = application.ReadLine();
@@ -121,6 +111,29 @@ namespace OurChat.Controllers
             db.Users.Add(registeredUser);
 
             return registeredUser;
+        }
+
+        public string GetLogin(DataBase db, Application application)
+        {
+            while (true)
+            {
+                application.WriteLine("Please insert your new login first");
+                string login = application.ReadLine();
+                bool isMatch = false;
+                foreach (var user in db.Users)
+                {
+                    if (user.Login == login)
+                    {
+                        application.Error("This login is already used, choose another one");
+                        isMatch = true;
+                        break;
+                    }
+                }
+                if (isMatch == false)
+                {
+                    return login;
+                }
+            }
         }
     }
 }
