@@ -11,25 +11,11 @@ namespace OurChat.Controllers
     {
         public User Registration(DataBase db, Application application)
         {
-            string regpassword;
             int age = -1;
             application.WriteLine("Please insert your new login first");
             string login = GetLogin(db, application);
-
-            while (true)
-            {
-                application.WriteLine("Now insert your new password");
-                regpassword = application.ReadLine();
-                if (regpassword.Length > 5)
-                {
-                    break;
-                }
-                else
-                {
-                    application.Error("Password can't be empty or short!");
-                }
-            }
-
+            string password = GetPassword(application);
+            
             while (true)
             {
                 application.WriteLine("Now insert age");
@@ -103,7 +89,7 @@ namespace OurChat.Controllers
             User registeredUser = new User
             {
                 Login = login,
-                Password = regpassword,
+                Password = password,
                 Age = age,
                 Height = height,
                 Birthday = birthday,
@@ -132,6 +118,25 @@ namespace OurChat.Controllers
                 if (isMatch == false)
                 {
                     return login;
+                }
+            }
+        }
+
+        public string GetPassword(Application application)
+        {
+            string regpassword;
+            while (true)
+            {
+                application.WriteLine("Insert your new password");
+                regpassword = application.ReadLine();
+
+                if (regpassword.Length > 5)
+                {
+                    return regpassword;
+                }
+                else
+                {
+                    application.Error("The password must contain at least 6 symbols");
                 }
             }
         }
