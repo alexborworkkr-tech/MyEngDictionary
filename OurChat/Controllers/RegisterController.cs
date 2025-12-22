@@ -11,54 +11,11 @@ namespace OurChat.Controllers
     {
         public User Registration(DataBase db, Application application)
         {
-            int age = -1;
             application.WriteLine("Please insert your new login first");
             string login = GetLogin(db, application);
             string password = GetPassword(application);
-            
-            while (true)
-            {
-                application.WriteLine("Now insert age");
-                var regage = application.ReadLine();
-
-                if (int.TryParse(regage, out int result))
-                {
-                    age = result;
-                    break;
-                }
-                else
-                {
-                    application.WriteLine("Please insert digits");
-                }
-            }
-
-            if (age < 18)
-            {
-                application.Error("You're too young to be in system");
-                return null;
-            }
-            else if (age > 100)
-            {
-                application.Error("You're too old for this, GET OUT!");
-                return null;
-            }
-
-            DateTime birthday = default;
-            while (true)
-            {
-                application.WriteLine("Please insert your date of birth");
-                string regbirthday = application.ReadLine();
-                if (DateTime.TryParse(regbirthday, out DateTime birthdayresult))
-                {
-                    birthday = birthdayresult;
-                    break;
-                }
-                else
-                {
-                    application.Error("Please, use digits");
-                    return null;
-                }
-            }
+            int age = GetAge(application);
+            DateTime Birthday = GetBirthDay(application);
 
             float height = -1;
             while (true)
@@ -92,7 +49,7 @@ namespace OurChat.Controllers
                 Password = password,
                 Age = age,
                 Height = height,
-                Birthday = birthday,
+                Birthday = Birthday,
             };
             db.Users.Add(registeredUser);
 
@@ -137,6 +94,57 @@ namespace OurChat.Controllers
                 else
                 {
                     application.Error("The password must contain at least 6 symbols");
+                }
+            }
+        }
+
+        public int GetAge(Application app)
+        {
+            string regage;
+
+            while (true)
+            {
+                app.WriteLine("Now insert your age");
+                regage = app.ReadLine();
+
+                if (!int.TryParse(regage, out int result))
+                {
+                    app.Error("Please insert digits");
+                    continue;
+                }
+
+                int age = result;
+
+                if (age < 18)
+                {
+                    app.Error("You are supposed to be at least 18 years old to be in the system");
+                }
+                else if (age > 100)
+                {
+                    app.Error("You are supposed to be less than 100 years old to be in the system");
+                }
+                else
+                {
+                    return age;
+                }
+            }
+        }
+
+        public DateTime GetBirthDay(Application app)
+        {
+            DateTime birthday = default;
+            while (true)
+            {
+                app.WriteLine("Please insert your date of birth");
+                string regbirthday = app.ReadLine();
+                if (DateTime.TryParse(regbirthday, out birthday))
+                {
+                    return birthday;   
+                }
+                else
+                {
+                    app.Error("Please, use digits");
+                    continue;
                 }
             }
         }
