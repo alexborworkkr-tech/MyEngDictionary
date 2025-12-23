@@ -8,6 +8,10 @@ namespace ConsoleSergei2
         static void Main(string[] args)
         {
             var application = new Application();
+            Console.WriteLine("Insert a console command:");
+            Console.WriteLine("help");
+            Console.WriteLine("login");
+            Console.WriteLine("register");
             while (true)
             {
                 string command = Console.ReadLine();

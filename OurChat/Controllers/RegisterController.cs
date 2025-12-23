@@ -11,37 +11,11 @@ namespace OurChat.Controllers
     {
         public User Registration(DataBase db, Application application)
         {
-            application.WriteLine("Please insert your new login first");
             string login = GetLogin(db, application);
             string password = GetPassword(application);
             int age = GetAge(application);
             DateTime Birthday = GetBirthDay(application);
-
-            float height = -1;
-            while (true)
-            {
-                application.WriteLine("How tall are you? Please, use cm's");
-                string regheight = application.ReadLine();
-                if (float.TryParse(regheight, out float heightresult))
-                {
-                    height = heightresult;
-                    break;
-                }
-                else
-                {
-                    application.Error("Please, use digits");
-                    return null;
-                }
-            }
-
-
-            // Boris: здесь ошибка, т.к. мы переделали наши коллекции на список Users, потом переделаем
-            // эту ошибку под актуальный код
-            //userLogins.Add(login);
-            //userPassword.Add(regpassword);
-            //userAges.Add(age);
-            //userHeight.Add(height);
-            //userBirthday.Add(birthday);
+            float height = GetHeight(application);
 
             User registeredUser = new User
             {
@@ -56,7 +30,7 @@ namespace OurChat.Controllers
             return registeredUser;
         }
 
-        public string GetLogin(DataBase db, Application application)
+        private string GetLogin(DataBase db, Application application)
         {
             while (true)
             {
@@ -79,7 +53,7 @@ namespace OurChat.Controllers
             }
         }
 
-        public string GetPassword(Application application)
+        private string GetPassword(Application application)
         {
             string regpassword;
             while (true)
@@ -98,7 +72,7 @@ namespace OurChat.Controllers
             }
         }
 
-        public int GetAge(Application app)
+        private int GetAge(Application app)
         {
             string regage;
 
@@ -119,7 +93,7 @@ namespace OurChat.Controllers
                 {
                     app.Error("You are supposed to be at least 18 years old to be in the system");
                 }
-                else if (age > 100)
+                else if (age >= 100)
                 {
                     app.Error("You are supposed to be less than 100 years old to be in the system");
                 }
@@ -130,7 +104,7 @@ namespace OurChat.Controllers
             }
         }
 
-        public DateTime GetBirthDay(Application app)
+        private DateTime GetBirthDay(Application app)
         {
             DateTime birthday = default;
             while (true)
@@ -139,11 +113,30 @@ namespace OurChat.Controllers
                 string regbirthday = app.ReadLine();
                 if (DateTime.TryParse(regbirthday, out birthday))
                 {
-                    return birthday;   
+                    return birthday;
                 }
                 else
                 {
                     app.Error("Please, use digits");
+                    continue;
+                }
+            }
+        }
+
+        private float GetHeight(Application application)
+        {
+            float height = -1;
+            while (true)
+            {
+                application.WriteLine("Insert your height by using cm's");
+                string regheight = application.ReadLine();
+                if (float.TryParse(regheight, out height))
+                {
+                    return height;
+                }
+                else
+                {
+                    application.Error("Please, use digits");
                     continue;
                 }
             }
